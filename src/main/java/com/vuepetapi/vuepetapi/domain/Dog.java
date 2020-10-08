@@ -1,5 +1,7 @@
 package com.vuepetapi.vuepetapi.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 
 
@@ -7,7 +9,7 @@ import javax.persistence.*;
     public class Dog  {
 
         @Id
-        @GeneratedValue(strategy = GenerationType.IDENTITY)
+        @GeneratedValue(strategy = GenerationType.AUTO)
         private Integer id;
 
         @Column(name = "nome")
@@ -20,6 +22,7 @@ import javax.persistence.*;
         @Column(name = "idade")
         private Number idade;
 
+        @JsonIgnore
         @ManyToOne
         @JoinColumn(name = "vet_id")
         private Vet vetResponsavel;
@@ -34,7 +37,7 @@ import javax.persistence.*;
             this.raca = raca;
             this.peso = peso;
             this.idade = idade;
-            this.vetResponsavel = vetResponsavel;
+
         }
 
         public Integer getId() {
@@ -77,5 +80,11 @@ import javax.persistence.*;
             this.idade = idade;
         }
 
+        public Vet getVetResponsavel() {
+            return vetResponsavel;
+        }
 
-}
+        public void setVetResponsavel(Vet vetResponsavel) {
+            this.vetResponsavel = vetResponsavel;
+        }
+    }

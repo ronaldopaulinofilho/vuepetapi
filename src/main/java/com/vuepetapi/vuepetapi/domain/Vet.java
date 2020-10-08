@@ -1,17 +1,13 @@
 package com.vuepetapi.vuepetapi.domain;
 
-import jdk.jfr.Name;
-
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 @Entity
 public class Vet {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
     @Column(name = "nome")
@@ -23,7 +19,7 @@ public class Vet {
     @Column(unique=true)
     private String cpf;
 
-    @OneToMany(mappedBy = "vetResponsavel", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "vetResponsavel", targetEntity = Dog.class, fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     private List<Dog> dogs;
 
 

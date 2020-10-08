@@ -1,6 +1,7 @@
 package com.vuepetapi.vuepetapi.services;
 
 
+import com.vuepetapi.vuepetapi.domain.Dog;
 import com.vuepetapi.vuepetapi.domain.Vet;
 import com.vuepetapi.vuepetapi.exceptions.DataIntegrityException;
 import com.vuepetapi.vuepetapi.exceptions.ObjectNotFoundException;
@@ -20,6 +21,11 @@ public class VetService {
     public Vet find (Integer id){
         Optional<Vet> obj = repo.findById(id);
         return obj.orElseThrow(()-> new ObjectNotFoundException("Objeto não encontrado! Id:" + id + ", Tipo:" + Vet.class.getName()));
+    }
+
+    public Vet findByNome (String nome){
+        Optional<Vet> obj = repo.findByNome(nome);
+        return obj.orElseThrow(()-> new ObjectNotFoundException("Objeto não encontrado! Nome:" + nome + ", Tipo:"+ Dog.class.getName()));
     }
     public Vet insert(Vet obj){
         obj.setId(null);

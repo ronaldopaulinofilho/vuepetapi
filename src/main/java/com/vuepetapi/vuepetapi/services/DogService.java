@@ -1,15 +1,16 @@
 package com.vuepetapi.vuepetapi.services;
 
 
-import com.vuepetapi.vuepetapi.controller.DogController;
 import com.vuepetapi.vuepetapi.domain.Dog;
 
 import com.vuepetapi.vuepetapi.exceptions.DataIntegrityException;
 import com.vuepetapi.vuepetapi.exceptions.ObjectNotFoundException;
 import com.vuepetapi.vuepetapi.repositories.DogRepository;
+import com.vuepetapi.vuepetapi.repositories.VetRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+
 
 import java.util.List;
 import java.util.Optional;
@@ -18,11 +19,11 @@ import java.util.Optional;
 public class DogService {
     @Autowired
     private DogRepository repo;
+    @Autowired
+    private VetRepository vetRepo;
 
-    public List<Dog> findByNome(String nome) {
-        List<Dog> obj = repo.findAll();
-        return  repo.findAll();
-    }
+
+
 
     public Dog find (Integer id){
         Optional<Dog> obj = repo.findById(id);
@@ -50,6 +51,8 @@ public class DogService {
     public List<Dog> findAll(){
         return repo.findAll();
     }
+
+
 
 
 }

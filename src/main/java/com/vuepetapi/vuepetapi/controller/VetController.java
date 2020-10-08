@@ -11,10 +11,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import javax.validation.Valid;
 import java.net.URI;
+import java.util.Collections;
 import java.util.List;
-import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping(value = "/vets")
@@ -22,6 +22,8 @@ public class VetController {
 
     @Autowired
     private VetService service;
+    @Autowired
+   private VetRepository vetRepo;
 
     @GetMapping(value = "/{id}")
     public ResponseEntity <Vet> find (@PathVariable Integer id){
@@ -36,27 +38,45 @@ public class VetController {
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getId()).toUri();
         return ResponseEntity.created(uri).build();
     }
-    @GetMapping("/{nome}")
-    public ResponseEntity<Vet> findByName (@PathVariable("nome") String nome){
-        Vet vetName = null;
-        Vet [] vets = new Vet[0];
-        for (Vet vet: vets){
-            if (vet.getNome().equalsIgnoreCase(nome)) {
-                vetName = vet;
-            }
-        }
-        if(vetName != null){
-            return new ResponseEntity<Vet>(vetName, HttpStatus.OK);
-        } else{
-            return new ResponseEntity<Vet>(HttpStatus.NO_CONTENT);
-        }
-    }
+
 
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
-    public ResponseEntity<Void>update( @RequestBody Vet obj, @PathVariable Integer id) {
-        obj.setId(id);
-        obj = service.update(obj);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<Vet> update(@RequestBody Vet obj, @PathVariable Integer id) {
+        return vetRepo.findById(id)
+                .map(record -> {
+                    record.setNome(obj.getNome());
+                  record.setCpf(obj.getCpf());
+                    Vet updated = vetRepo.save(record);
+                    return ResponseEntity.ok().body(updated);
+                }).orElse(ResponseEntity.notFound().build());
+    }
+    @GetMapping("{id}/dogs")
+    public ResponseEntity<List<Dog>> findAllDogs(@PathVariable("id") Integer id) {
+        List<Dog> result = vetRepo.findDogsById(id);
+        if(!result.isEmpty()) {
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+    }
+    @GetMapping
+    public ResponseEntity<List<Dog>> findAllByNome(@RequestParam(value = "nome", required = false) String nome) {
+        List<Vet> vetName;
+
+        //validar nome
+        if (nome != null) {
+            Optional<Vet> vet = vetRepo.findByNome(nome);
+
+            if(vet.isPresent()) {
+                vetName = Collections.singletonList(vet.get());
+            } else {
+                vetName = Collections.emptyList();
+            }
+        } else {
+            vetName = vetRepo.findAll();
+        }
+
+        return new ResponseEntity(vetName, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
@@ -65,14 +85,6 @@ public class VetController {
         return ResponseEntity.noContent().build();
 
     }
-    @RequestMapping(method = RequestMethod.GET)
-    public ResponseEntity <List<Vet>> findAll(){
-        List <Vet> list = service.findAll();
-        return ResponseEntity.ok().body(list);
-
-    }
-
-
 
 
 
