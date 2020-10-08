@@ -30,7 +30,7 @@ import javax.persistence.*;
 
         }
 
-        public Dog(Integer id, String nome, String raca, Number peso, Number idade, Vet vetResponsavel) {
+        public Dog(String nome, String raca, Number peso, Number idade) {
             super();
             this.id = id;
             this.nome = nome;

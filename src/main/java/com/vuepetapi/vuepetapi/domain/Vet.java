@@ -23,7 +23,7 @@ public class Vet {
     private List<Dog> dogs;
 
 
-    public Vet(){
+    public Vet(String ww, String s, String s1){
 
     }
 
