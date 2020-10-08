@@ -1,28 +1,40 @@
 package com.vuepetapi.vuepetapi.domain;
 
 import javax.persistence.*;
-import java.io.Serializable;
+
 
     @Entity
     public class Dog  {
 
         @Id
+        @GeneratedValue(strategy = GenerationType.IDENTITY)
         private Integer id;
 
-        @Column
+        @Column(name = "nome")
         private String nome;
 
-        @Column
+        @Column(name = "raca")
         private String raca;
+        @Column(name = "peso")
         private Number peso;
+        @Column(name = "idade")
         private Number idade;
 
-        public Dog(Integer id, String nome, String raca, Number peso, Number idade) {
+        @ManyToOne
+        @JoinColumn(name = "vet_id")
+        private Vet vetResponsavel;
+        public Dog(){
+
+        }
+
+        public Dog(Integer id, String nome, String raca, Number peso, Number idade, Vet vetResponsavel) {
+            super();
             this.id = id;
             this.nome = nome;
             this.raca = raca;
             this.peso = peso;
             this.idade = idade;
+            this.vetResponsavel = vetResponsavel;
         }
 
         public Integer getId() {
@@ -64,4 +76,6 @@ import java.io.Serializable;
         public void setIdade(Number idade) {
             this.idade = idade;
         }
-    }
+
+
+}

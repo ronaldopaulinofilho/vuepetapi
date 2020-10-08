@@ -1,38 +1,31 @@
 package com.vuepetapi.vuepetapi.services;
 
 
-import com.vuepetapi.vuepetapi.controller.DogController;
-import com.vuepetapi.vuepetapi.domain.Dog;
-
+import com.vuepetapi.vuepetapi.domain.Vet;
 import com.vuepetapi.vuepetapi.exceptions.DataIntegrityException;
 import com.vuepetapi.vuepetapi.exceptions.ObjectNotFoundException;
-import com.vuepetapi.vuepetapi.repositories.DogRepository;
+import com.vuepetapi.vuepetapi.repositories.VetRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
-public class DogService {
+public class VetService {
     @Autowired
-    private DogRepository repo;
-
-    public List<Dog> findByNome(String nome) {
-        List<Dog> obj = repo.findAll();
-        return  repo.findAll();
+    private VetRepository repo;
+    public Vet find (Integer id){
+        Optional<Vet> obj = repo.findById(id);
+        return obj.orElseThrow(()-> new ObjectNotFoundException("Objeto não encontrado! Id:" + id + ", Tipo:" + Vet.class.getName()));
     }
-
-    public Dog find (Integer id){
-        Optional<Dog> obj = repo.findById(id);
-        return obj.orElseThrow(()-> new ObjectNotFoundException("Objeto não encontrado! Id:" + id + ", Tipo:" + Dog.class.getName()));
-    }
-    public Dog insert(Dog obj){
+    public Vet insert(Vet obj){
         obj.setId(null);
         return repo.save(obj);
     }
-    public Dog update (Dog obj) {
+    public Vet update (Vet obj) {
         find(obj.getId());
         return repo.save(obj);
     }
@@ -42,21 +35,13 @@ public class DogService {
         try {
             repo.deleteById(id);
         } catch (DataIntegrityViolationException e) {
-            throw new DataIntegrityException("Não é possível excluir esse cachorro");
+            throw new DataIntegrityException("Não é possível excluir esse Veterinário ");
 
         }
-
     }
-    public List<Dog> findAll(){
+    public List<Vet> findAll(){
         return repo.findAll();
     }
 
 
 }
-
-
-
-
-
-
-
