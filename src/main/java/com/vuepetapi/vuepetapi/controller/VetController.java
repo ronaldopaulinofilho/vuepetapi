@@ -16,6 +16,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+@CrossOrigin
 @RestController
 @RequestMapping(value = "/vets")
 public class VetController {
@@ -23,51 +24,49 @@ public class VetController {
     @Autowired
     private VetService service;
     @Autowired
-   private VetRepository vetRepo;
+    private VetRepository vetRepo;
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity <Vet> find (@PathVariable Integer id){
+    public ResponseEntity<Vet> find(@PathVariable Integer id) {
         Vet obj = service.find(id);
         return ResponseEntity.ok().body(obj);
     }
 
-
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Void> insert (@RequestBody Vet obj) {
+    public ResponseEntity<Void> insert(@RequestBody Vet obj) {
         obj = service.insert(obj);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getId()).toUri();
         return ResponseEntity.created(uri).build();
     }
-
 
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
     public ResponseEntity<Vet> update(@RequestBody Vet obj, @PathVariable Integer id) {
         return vetRepo.findById(id)
                 .map(record -> {
                     record.setNome(obj.getNome());
-                  record.setCpf(obj.getCpf());
+                    record.setCpf(obj.getCpf());
+                    record.setDogs(obj.getDogs());
                     Vet updated = vetRepo.save(record);
                     return ResponseEntity.ok().body(updated);
                 }).orElse(ResponseEntity.notFound().build());
     }
+
     @GetMapping("{id}/dogs")
     public ResponseEntity<List<Dog>> findAllDogs(@PathVariable("id") Integer id) {
         List<Dog> result = vetRepo.findDogsById(id);
-        if(!result.isEmpty()) {
+        if (!result.isEmpty()) {
             return new ResponseEntity<>(result, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
     }
+
     @GetMapping
     public ResponseEntity<List<Dog>> findAllByNome(@RequestParam(value = "nome", required = false) String nome) {
         List<Vet> vetName;
-
-        //validar nome
         if (nome != null) {
             Optional<Vet> vet = vetRepo.findByNome(nome);
-
-            if(vet.isPresent()) {
+            if (vet.isPresent()) {
                 vetName = Collections.singletonList(vet.get());
             } else {
                 vetName = Collections.emptyList();
@@ -75,7 +74,6 @@ public class VetController {
         } else {
             vetName = vetRepo.findAll();
         }
-
         return new ResponseEntity(vetName, HttpStatus.OK);
     }
 
@@ -83,9 +81,5 @@ public class VetController {
     public ResponseEntity<Void> delete(@PathVariable Integer id) {
         service.delete(id);
         return ResponseEntity.noContent().build();
-
     }
-
-
-
 }

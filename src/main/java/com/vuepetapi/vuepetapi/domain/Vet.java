@@ -16,17 +16,14 @@ public class Vet {
     @Column(name = "data")
     private String data;
 
-    @Column(unique=true)
+    @Column(unique = true)
     private String cpf;
 
     @OneToMany(mappedBy = "vetResponsavel", targetEntity = Dog.class, fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     private List<Dog> dogs;
 
-
-    public Vet(){
-
+    public Vet() {
     }
-
     public Vet(Integer id, String nome, String data, String cpf, List<Dog> dogs) {
         super();
         this.id = id;
@@ -39,7 +36,6 @@ public class Vet {
     public Integer getId() {
         return id;
     }
-
     public void setId(Integer id) {
         this.id = id;
     }
@@ -47,7 +43,6 @@ public class Vet {
     public String getNome() {
         return nome;
     }
-
     public void setNome(String nome) {
         this.nome = nome;
     }
@@ -55,7 +50,6 @@ public class Vet {
     public String getData() {
         return data;
     }
-
     public void setData(String data) {
         this.data = data;
     }
@@ -63,7 +57,6 @@ public class Vet {
     public String getCpf() {
         return cpf;
     }
-
     public void setCpf(String cpf) {
         this.cpf = cpf;
     }
@@ -71,10 +64,7 @@ public class Vet {
     public List<Dog> getDogs() {
         return dogs;
     }
-
     public void setDogs(List<Dog> dogs) {
         this.dogs = dogs;
     }
-
-
 }

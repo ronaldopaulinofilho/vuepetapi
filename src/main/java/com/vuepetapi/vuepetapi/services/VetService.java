@@ -11,32 +11,34 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @Service
 public class VetService {
     @Autowired
     private VetRepository repo;
-    public Vet find (Integer id){
+
+    public Vet find(Integer id) {
         Optional<Vet> obj = repo.findById(id);
-        return obj.orElseThrow(()-> new ObjectNotFoundException("Objeto não encontrado! Id:" + id + ", Tipo:" + Vet.class.getName()));
+        return obj.orElseThrow(() -> new ObjectNotFoundException("Objeto não encontrado! Id:" + id + ", Tipo:" + Vet.class.getName()));
     }
 
-    public Vet findByNome (String nome){
+    public Vet findByNome(String nome) {
         Optional<Vet> obj = repo.findByNome(nome);
-        return obj.orElseThrow(()-> new ObjectNotFoundException("Objeto não encontrado! Nome:" + nome + ", Tipo:"+ Dog.class.getName()));
+        return obj.orElseThrow(() -> new ObjectNotFoundException("Objeto não encontrado! Nome:" + nome + ", Tipo:" + Dog.class.getName()));
     }
-    public Vet insert(Vet obj){
+
+    public Vet insert(Vet obj) {
         obj.setId(null);
         return repo.save(obj);
     }
-    public Vet update (Vet obj) {
+
+    public Vet update(Vet obj) {
         find(obj.getId());
         return repo.save(obj);
     }
 
-    public void delete (Integer id) {
+    public void delete(Integer id) {
         find(id);
         try {
             repo.deleteById(id);
@@ -45,9 +47,9 @@ public class VetService {
 
         }
     }
-    public List<Vet> findAll(){
+
+    public List<Vet> findAll() {
         return repo.findAll();
     }
-
 
 }

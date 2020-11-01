@@ -7,7 +7,6 @@ public class VetRequest {
     public Integer getId() {
         return id;
     }
-
     public void setId(Integer id) {
         this.id = id;
     }
@@ -15,7 +14,6 @@ public class VetRequest {
     public String getNome() {
         return nome;
     }
-
     public void setNome(String nome) {
         this.nome = nome;
     }

@@ -20,7 +20,7 @@ import java.util.Optional;
 
 @CrossOrigin
 @RestController
-@RequestMapping(value="/dogs")
+@RequestMapping(value = "/dogs")
 public class DogController {
 
     @Autowired
@@ -40,7 +40,6 @@ public class DogController {
         return ResponseEntity.ok().body(obj);
     }
 
-
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> insert(@RequestBody Dog obj) {
         obj = service.insert(obj);
@@ -56,29 +55,24 @@ public class DogController {
                     record.setIdade(obj.getIdade());
                     record.setPeso(obj.getPeso());
                     record.setRaca(obj.getNome());
+                    record.setVetResponsavel(obj.getVetResponsavel());
                     Dog updated = repo.save(record);
                     return ResponseEntity.ok().body(updated);
                 }).orElse(ResponseEntity.notFound().build());
     }
-
-
 
     @PatchMapping(value = "{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity addVet(
             @RequestBody VetRequest vetRequest,
             @PathVariable Integer id) {
         Optional<Dog> dogFromDB = repo.findById(id);
-
         if (dogFromDB.isPresent()) {
             Dog dog = dogFromDB.get();
 
             Optional<Vet> vetFromDB = vetRepo.findById(vetRequest.getId());
-
-            if(vetFromDB.isPresent()) {
+            if (vetFromDB.isPresent()) {
                 Vet vet = vetFromDB.get();
-
                 dog.setVetResponsavel(vet);
-
                 repo.save(dog);
                 return new ResponseEntity(HttpStatus.OK);
             }
@@ -86,36 +80,25 @@ public class DogController {
         return new ResponseEntity(HttpStatus.BAD_REQUEST);
     }
 
-
-
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     public ResponseEntity<Void> delete(@PathVariable Integer id) {
         service.delete(id);
         return ResponseEntity.noContent().build();
-
     }
+
     @GetMapping
     public ResponseEntity<List<Dog>> findAllByNome(@RequestParam(value = "nome", required = false) String nome) {
         List<Dog> dogName;
-
-        //validar nome
         if (nome != null) {
-           Optional<Dog> dog = repo.findByNome(nome);
-
-            if(dog.isPresent()) {
-               dogName = Collections.singletonList(dog.get());
+            Optional<Dog> dog = repo.findByNome(nome);
+            if (dog.isPresent()) {
+                dogName = Collections.singletonList(dog.get());
             } else {
                 dogName = Collections.emptyList();
             }
         } else {
             dogName = repo.findAll();
         }
-
         return new ResponseEntity(dogName, HttpStatus.OK);
     }
-
-
-
-
-
 }

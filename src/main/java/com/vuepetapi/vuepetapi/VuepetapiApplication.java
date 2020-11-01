@@ -10,9 +10,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @EnableJpaRepositories
 
 public class VuepetapiApplication {
-
 	public static void main(String[] args) {
 		SpringApplication.run(VuepetapiApplication.class, args);
 	}
-
 }

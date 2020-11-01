@@ -11,10 +11,8 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface VetRepository extends JpaRepository <Vet, Integer> {
-
+public interface VetRepository extends JpaRepository<Vet, Integer> {
     Optional<Vet> findByNome(String nome);
-   @Query( value ="SELECT v.dogs from Vet v where v.id = :id")
-    List<Dog>  findDogsById(@Param("id")Integer id);
-
+    @Query(value = "SELECT v.dogs from Vet v where v.id = :id")
+    List<Dog> findDogsById(@Param("id") Integer id);
 }

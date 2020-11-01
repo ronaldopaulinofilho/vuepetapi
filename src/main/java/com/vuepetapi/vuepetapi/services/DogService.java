@@ -23,38 +23,33 @@ public class DogService {
     private VetRepository vetRepo;
 
 
-
-
-    public Dog find (Integer id){
+    public Dog find(Integer id) {
         Optional<Dog> obj = repo.findById(id);
-        return obj.orElseThrow(()-> new ObjectNotFoundException("Objeto não encontrado! Id:" + id + ", Tipo:" + Dog.class.getName()));
+        return obj.orElseThrow(() -> new ObjectNotFoundException("Objeto não encontrado! Id:" + id + ", Tipo:" + Dog.class.getName()));
     }
-    public Dog insert(Dog obj){
+
+    public Dog insert(Dog obj) {
         obj.setId(null);
         return repo.save(obj);
     }
-    public Dog update (Dog obj) {
+
+    public Dog update(Dog obj) {
         find(obj.getId());
         return repo.save(obj);
     }
 
-    public void delete (Integer id) {
+    public void delete(Integer id) {
         find(id);
         try {
             repo.deleteById(id);
         } catch (DataIntegrityViolationException e) {
             throw new DataIntegrityException("Não é possível excluir esse cachorro");
-
         }
-
     }
-    public List<Dog> findAll(){
+
+    public List<Dog> findAll() {
         return repo.findAll();
     }
-
-
-
-
 }
 
 
